@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Web Workers Demo by Faheem</title>
+	<style type="text/css">
+	img {
+		width: 100px;
+		height: 100px;
+		margin: 15px;
+	}
+
+	div {
+		text-align: center;
+	}
+	</style>
+</head>
+
+<body>
+	<div>
+		<h2> Displaying first 30 Github users avatar using web worker.</h2>
+		<input type="button" name="start" value="Start Worker" onclick="startWorker()">
+		<input type="button" name="stop" value="Stop Worker" onclick="stopWorker()">
+		<hr />
+	</div>
+	<div id="users"></div>
+	<script>
+	var myWorker;
+
+	function startWorker() {
+		if (typeof(Worker) !== "undefined") {
+			if (typeof(myWorker) === "undefined") {
+				myWorker = new Worker('worker.js');
+			}
+			// myWorker.postMessage(22);
+			myWorker.onmessage = function(event) {
+				var img = document.createElement("IMG");
+				img.src = event.data;
+				document.getElementById("users").appendChild(img);
+			};
+		} else {
+			document.getElementById("users").innerHTML = "Sorry! your browser doesn't support web workers!! Use chrome be Happy!!";
+		}
+	}
+
+	function stopWorker() {
+		myWorker.terminate();
+		myWorker = undefined;
+	}
+	</script>
+</body>
+
+</html>
